@@ -9,15 +9,14 @@ QT       += core
 QT       -= gui
 
 TARGET = test_pool
-CONFIG   += console
-#c++11
+CONFIG   += console c++11
 CONFIG   -= app_bundle
 
 TEMPLATE = app
 
 LIBS += -lboost_system
 
-#QMAKE_CXXFLAGS    = -std=c++11
+QMAKE_CXXFLAGS    = -std=c++11
 
 
 SOURCES += main.cpp
