@@ -19,10 +19,7 @@ public:
     }
 
 private:
-//    int val_;
-//    int val1_;
-//    int val2_;
-//    int val3_;
+    char val_[71];
 };
 
 struct TestAllocator
@@ -78,7 +75,8 @@ public:
     T* allocate(std::size_t n)
     {
         qDebug() << typeid(T).name() <<  sizeof(T) << n;
-        return static_cast<T*>(pool_->malloc());
+        auto v = static_cast<T*>(pool_->malloc());
+        return v;
     }
 
     void deallocate(T* p, std::size_t n)
@@ -86,6 +84,18 @@ public:
         qDebug() << typeid(T).name() <<  sizeof(T) << n;
         pool_->free(p);
     }
+
+    void destroy(T* p)
+    {
+        //::operator delete(p);
+//        qDebug() << "<435c1cf1> destroy";
+    }
+
+    template<typename U>
+    struct rebind
+    {
+        typedef PoolAllocator<U, PoolPtr> other;
+    };
 
     const PoolPtr& pool() const { return pool_; }
 
@@ -115,10 +125,21 @@ public:
         : size_(src.size_)
     {}
 
+    template<typename U>
+    struct rebind
+    {
+        typedef CalcAllocator<U> other;
+    };
+
     T* allocate(std::size_t)
     {
         size_ = sizeof(T);
         return nullptr;
+    }
+
+    void destroy(T* p)
+    {
+        qDebug() << "<ae0cf8b9> destroy";
     }
 
     void deallocate(T*, std::size_t) {}
@@ -139,7 +160,11 @@ int main(int , char **)
 {
     TestPtr test;
     {
-        TestPoolPtr pool = std::make_shared<TestPool>(calcHolderSize<Test>());
+        int sz = calcHolderSize<Test>();
+
+        qDebug() << sz << sizeof(Test);
+
+        TestPoolPtr pool = std::make_shared<TestPool>(sz);
 
         test = createObjectFromPool<Test>(pool);
         std::list<TestPtr> list;
