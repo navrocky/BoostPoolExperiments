@@ -15,8 +15,8 @@ CONFIG   -= app_bundle
 TEMPLATE = app
 
 
-LIBS += -Lc:/Boost_1_56/lib/ -llibboost_system-vc100-mt-gd-1_56
-#LIBS += -lboost_system
+#LIBS += -Lc:/Boost_1_56/lib/ -llibboost_system-vc100-mt-gd-1_56
+LIBS += -lboost_system
 
 QMAKE_CXXFLAGS    = -std=c++11
 

@@ -10,6 +10,7 @@ class Test
 public:
     Test()
     {
+        str = "asdadasdas";
         qDebug() << "Test";
     }
 
@@ -20,6 +21,7 @@ public:
 
 private:
     char val_[71];
+    std::string str;
 };
 
 struct TestAllocator
@@ -87,8 +89,7 @@ public:
 
     void destroy(T* p)
     {
-        //::operator delete(p);
-//        qDebug() << "<435c1cf1> destroy";
+        p->~T();
     }
 
     template<typename U>
@@ -106,7 +107,7 @@ private:
 template <typename T, typename PoolPtr>
 std::shared_ptr<T> createObjectFromPool(const PoolPtr& pool)
 {
-    PoolAllocator<void, PoolPtr> alloc(pool);
+    PoolAllocator<T, PoolPtr> alloc(pool);
     return std::allocate_shared<T>(alloc);
 }
 
@@ -137,11 +138,7 @@ public:
         return nullptr;
     }
 
-    void destroy(T* p)
-    {
-        qDebug() << "<ae0cf8b9> destroy";
-    }
-
+    void destroy(T*) {}
     void deallocate(T*, std::size_t) {}
 
     int& size_;
